@@ -78,10 +78,10 @@ class StoryList {
       method: "POST",
       data: { token: user["loginToken"], story: newStory },
     });
-    const story = response.data.story;
+    const story = new Story(response.data.story);
     this.stories.unshift(story);
     user.ownStories.unshift(story);
-    return new Story(story);
+    return story;
   }
 
   /** Removes story data from API and from story list
@@ -223,7 +223,7 @@ class User {
   }
 
   async removeFavorite(story) {
-    this.favorites.filter((s) => s.storyId !== story.storyId);
+    this.favorites = this.favorites.filter((s) => s.storyId !== story.storyId);
     await axios({
       url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
       method: "DELETE",
